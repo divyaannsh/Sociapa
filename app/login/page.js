@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -11,31 +12,22 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
+    const result = await login(username, password);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push('/analytics/dashboard');
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+    if (result.success) {
+      router.push('/analytics/dashboard');
+    } else {
+      setError(result.message || 'Login failed');
     }
+
+    setLoading(false);
   };
 
   return (
@@ -90,9 +82,9 @@ export default function Login() {
         </form>
 
         <div className="text-center mt-3">
-            <Link href="/" className="text-decoration-none text-muted small">
-                Back to Home
-            </Link>
+          <small className="text-muted">
+            Default credentials: admin / admin123
+          </small>
         </div>
       </div>
     </div>

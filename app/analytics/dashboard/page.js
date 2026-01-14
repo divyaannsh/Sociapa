@@ -12,18 +12,23 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import ClientSelector from '../../../components/ClientSelector';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function AnalyticsDashboard() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const { isAuthenticated, loading, requireAuth, logout } = useAuth();
   const [clients, setClients] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState('');
   const [campaigns, setCampaigns] = useState([]);
-  const [dateFilter, setDateFilter] = useState('month'); // 'month', 'range', 'day'
+  const [dateFilter, setDateFilter] = useState('all'); // Changed from 'month' to 'all'
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [activePlatform, setActivePlatform] = useState('all'); // 'all', 'google', 'meta', etc.
+
+  const [clientData, setClientData] = useState(null);
+  const [loadingSampleData, setLoadingSampleData] = useState(false);
 
   // New State for Comparison
   const [viewMode, setViewMode] = useState('dashboard'); // 'dashboard' | 'comparison'
@@ -31,20 +36,30 @@ export default function AnalyticsDashboard() {
   const [compareSelection, setCompareSelection] = useState([]);
   const [compareMetric, setCompareMetric] = useState('spend'); // 'spend', 'impressions', 'clicks'
 
+  // Handle authentication
+  useEffect(() => {
+    if (!loading) {
+      requireAuth();
+    }
+  }, [loading, requireAuth]);
+
   // Fetch Clients
   useEffect(() => {
     const fetchClients = async () => {
       try {
+        console.log("🔍 Analytics Dashboard - Fetching clients...");
         const res = await fetch('/api/clients');
         const data = await res.json();
         if (res.ok) {
-          setClients(data.clients || []);
-          if (data.clients && data.clients.length > 0) {
-            setSelectedClientId(data.clients[0]._id);
+          const clientsData = data.clients || [];
+          console.log("📊 Analytics Dashboard - Clients fetched:", clientsData);
+          setClients(clientsData);
+          if (clientsData && clientsData.length > 0) {
+            setSelectedClientId(clientsData[0]._id);
           }
         }
       } catch (err) {
-        console.error('Error fetching clients:', err);
+        console.error('❌ Analytics Dashboard - Error fetching clients:', err);
       } finally {
         setLoading(false);
       }
@@ -77,17 +92,73 @@ export default function AnalyticsDashboard() {
     if (!selectedClientId) return;
     const fetchCampaigns = async () => {
       try {
+        console.log("🔍 Analytics Dashboard - Fetching campaigns for client:", selectedClientId);
         const res = await fetch(`/api/campaigns?clientId=${selectedClientId}`);
         const data = await res.json();
         if (res.ok) {
-          setCampaigns(data.campaigns || []);
+          const fetchedCampaigns = data.campaigns || [];
+          console.log("📈 Analytics Dashboard - Campaigns fetched:", fetchedCampaigns);
+          console.log("📊 Analytics Dashboard - Total campaigns:", fetchedCampaigns.length);
+          
+          if (fetchedCampaigns.length > 0) {
+            const firstCampaign = fetchedCampaigns[0];
+            console.log("📋 Analytics Dashboard - Sample campaign structure:", firstCampaign);
+            console.log("📋 Analytics Dashboard - Sample campaign rows:", firstCampaign.rows);
+            console.log("📋 Analytics Dashboard - Row fields:", firstCampaign.rows && firstCampaign.rows.length > 0 ? Object.keys(firstCampaign.rows[0]) : "No rows");
+          }
+          
+          setCampaigns(fetchedCampaigns);
+        } else {
+          console.error("❌ Analytics Dashboard - Failed to fetch campaigns:", data);
         }
       } catch (err) {
-        console.error('Error fetching campaigns:', err);
+        console.error("❌ Analytics Dashboard - Error fetching campaigns:", err);
       }
     };
     fetchCampaigns();
   }, [selectedClientId]);
+
+  // Handle client data changes from ClientSelector
+  const handleClientDataChange = (data) => {
+    setClientData(data);
+    if (data) {
+      console.log("📊 Analytics dashboard - Client data populated:", data);
+    }
+  };
+
+  // Load Sample Data
+  const loadSampleData = async () => {
+    setLoadingSampleData(true);
+    try {
+      console.log("🔍 Loading sample data...");
+      const response = await fetch('/api/sample-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      const data = await response.json();
+      if (response.ok) {
+        console.log("✅ Sample data loaded successfully:", data);
+        // Refresh campaigns after adding sample data
+        if (selectedClientId) {
+          const res = await fetch(`/api/campaigns?clientId=${selectedClientId}`);
+          const campaignsData = await res.json();
+          if (res.ok) {
+            setCampaigns(campaignsData.campaigns || []);
+          }
+        }
+        alert('Sample data loaded successfully! Refresh the page to see the data.');
+      } else {
+        console.error("❌ Failed to load sample data:", data);
+        alert('Failed to load sample data: ' + data.message);
+      }
+    } catch (error) {
+      console.error("❌ Error loading sample data:", error);
+      alert('Error loading sample data');
+    } finally {
+      setLoadingSampleData(false);
+    }
+  };
 
   // Comparison Chart Data Logic
   const comparisonChartData = useMemo(() => {
@@ -118,32 +189,94 @@ export default function AnalyticsDashboard() {
 
   // Filter Data Logic (Single Client)
   const filteredData = useMemo(() => {
-    if (!campaigns.length) return [];
+    if (!campaigns.length) {
+      console.log("🔍 Analytics Dashboard - No campaigns available for filtering");
+      return [];
+    }
+
+    console.log("🔍 Analytics Dashboard - Date filter:", dateFilter);
+    console.log("🔍 Analytics Dashboard - Selected month:", selectedMonth);
+    console.log("🔍 Analytics Dashboard - Selected date:", selectedDate);
+    console.log("🔍 Analytics Dashboard - Date range:", dateRange);
+
+    // If 'all' filter selected, return all data
+    if (dateFilter === 'all') {
+      console.log("🔍 Analytics Dashboard - 'All' filter selected, returning all data");
+      const allRows = [];
+      campaigns.forEach((campaign, campaignIndex) => {
+        if (campaign.rows) {
+          console.log(`🔍 Analytics Dashboard - Processing campaign ${campaignIndex}:`, campaign.fileName);
+          campaign.rows.forEach((row, rowIndex) => {
+            let dateStr = row["Reporting starts"] || row["date"] || row["Date"] || row["Reporting ends"] || campaign.uploadedAt;
+            let date = new Date(dateStr);
+            
+            if (rowIndex < 3) { // Log first 3 rows for debugging
+              console.log(`📅 Analytics Dashboard - Row ${rowIndex} date processing:`, {
+                dateStr,
+                parsedDate: date,
+                isValid: !isNaN(date)
+              });
+            }
+            
+            if (!isNaN(date)) {
+              allRows.push({ ...row, parsedDate: date });
+            }
+          });
+        }
+      });
+      console.log("📊 Analytics Dashboard - All rows count:", allRows.length);
+      return allRows.sort((a, b) => a.parsedDate - b.parsedDate);
+    }
 
     let start, end;
     if (dateFilter === 'month') {
       const [year, month] = selectedMonth.split('-');
       start = new Date(year, month - 1, 1);
       end = new Date(year, month, 0, 23, 59, 59);
+      console.log("📅 Analytics Dashboard - Month filter range:", { start, end });
     } else if (dateFilter === 'day') {
       start = new Date(selectedDate);
       start.setHours(0, 0, 0, 0);
       end = new Date(selectedDate);
       end.setHours(23, 59, 59, 999);
+      console.log("📅 Analytics Dashboard - Day filter range:", { start, end });
     } else if (dateFilter === 'range' && dateRange.start && dateRange.end) {
       start = new Date(dateRange.start);
       end = new Date(dateRange.end);
       end.setHours(23, 59, 59, 999);
+      console.log("📅 Analytics Dashboard - Range filter:", { start, end });
     } else {
-      return [];
+      console.log("🔍 Analytics Dashboard - No valid date filter, returning all data");
+      // Return all data if no valid filter
+      const allRows = [];
+      campaigns.forEach(campaign => {
+        if (campaign.rows) {
+          campaign.rows.forEach(row => {
+            allRows.push({ ...row, parsedDate: new Date(campaign.uploadedAt) });
+          });
+        }
+      });
+      console.log("📊 Analytics Dashboard - All rows count:", allRows.length);
+      return allRows;
     }
 
     const rows = [];
-    campaigns.forEach(campaign => {
+    campaigns.forEach((campaign, campaignIndex) => {
       if (campaign.rows) {
-        campaign.rows.forEach(row => {
+        console.log(`🔍 Analytics Dashboard - Processing campaign ${campaignIndex}:`, campaign.fileName);
+        campaign.rows.forEach((row, rowIndex) => {
           let dateStr = row["Reporting starts"] || row["date"] || row["Date"] || row["Reporting ends"] || campaign.uploadedAt;
           let date = new Date(dateStr);
+          
+          if (rowIndex < 3) { // Log first 3 rows for debugging
+            console.log(`📅 Analytics Dashboard - Row ${rowIndex} date processing:`, {
+              dateStr,
+              parsedDate: date,
+              isValid: !isNaN(date),
+              inRange: !isNaN(date) && date >= start && date <= end
+            });
+          }
+          
           if (!isNaN(date) && date >= start && date <= end) {
             rows.push({ ...row, parsedDate: date });
           }
@@ -151,6 +284,7 @@ export default function AnalyticsDashboard() {
       }
     });
 
+    console.log("📊 Analytics Dashboard - Filtered rows count:", rows.length);
     return rows.sort((a, b) => a.parsedDate - b.parsedDate);
   }, [campaigns, dateFilter, selectedMonth, selectedDate, dateRange]);
 
@@ -158,12 +292,33 @@ export default function AnalyticsDashboard() {
   const metrics = useMemo(() => {
     let spend = 0, impressions = 0, clicks = 0, cpmSum = 0, cpcSum = 0, cpmCount = 0, cpcCount = 0;
     
-    filteredData.forEach(row => {
+    console.log("🔍 Analytics Dashboard - Calculating metrics from filteredData:", filteredData);
+    console.log("🔍 Analytics Dashboard - Filtered data length:", filteredData.length);
+    
+    if (filteredData.length > 0) {
+      console.log("📋 Analytics Dashboard - Sample filtered row:", filteredData[0]);
+      console.log("📋 Analytics Dashboard - Available fields in filtered row:", Object.keys(filteredData[0]));
+    }
+    
+    filteredData.forEach((row, index) => {
         const s = parseFloat(row["Amount spent (INR)"] || row["Amount spent"] || 0);
         const i = parseFloat(row["Impressions"] || 0);
         const c = parseFloat(row["Clicks (all)"] || row["Clicks"] || 0);
         const cpm = parseFloat(row["CPM (cost per 1,000 impressions)"] || row["CPM"] || 0);
         const cpc = parseFloat(row["CPC (all)"] || row["CPC"] || 0);
+
+        if (index < 3) { // Log first 3 rows for debugging
+          console.log(`📊 Analytics Dashboard - Row ${index}:`, {
+            spend: s,
+            impressions: i,
+            clicks: c,
+            cpm: cpm,
+            cpc: cpc,
+            rawSpend: row["Amount spent (INR)"] || row["Amount spent"],
+            rawImpressions: row["Impressions"],
+            rawClicks: row["Clicks (all)"] || row["Clicks"]
+          });
+        }
 
         if (!isNaN(s)) spend += s;
         if (!isNaN(i)) impressions += i;
@@ -174,6 +329,16 @@ export default function AnalyticsDashboard() {
 
     const avgCPM = impressions > 0 ? (spend / impressions) * 1000 : 0;
     const avgCPC = clicks > 0 ? spend / clicks : 0;
+
+    console.log("💰 Analytics Dashboard - Final metrics:", {
+      spend,
+      impressions,
+      clicks,
+      avgCPM,
+      avgCPC,
+      calculatedAvgCPM: avgCPM,
+      calculatedAvgCPC: avgCPC
+    });
 
     return { spend, impressions, clicks, avgCPM, avgCPC };
   }, [filteredData]);
@@ -248,18 +413,15 @@ export default function AnalyticsDashboard() {
                     >Comparison</button>
                  </div>
                  {viewMode === 'dashboard' && (
-                     <select 
-                        className="form-select border-0 shadow-sm fw-bold text-primary" 
-                        style={{ width: '200px', backgroundColor: '#fff', borderRadius: '12px' }}
-                        value={selectedClientId}
-                        onChange={(e) => setSelectedClientId(e.target.value)}
-                     >
-                        {clients.map(c => (
-                            <option key={c._id} value={c._id}>{c.companyName || c.username}</option>
-                        ))}
-                     </select>
+                     <ClientSelector
+                        onClientSelect={(clientId) => setSelectedClientId(clientId)}
+                        onClientDataChange={handleClientDataChange}
+                        showCurrentData={false} // Don't show overview since we have detailed analytics below
+                        disabled={loading}
+                        compact={true} // Add compact prop for smaller display in header
+                     />
                  )}
-                 <button className="btn btn-light text-danger fw-bold" onClick={() => router.push('/login')} style={{ borderRadius: '12px' }}>
+                 <button className="btn btn-light text-danger fw-bold" onClick={logout} style={{ borderRadius: '12px' }}>
                     <i className="feather-log-out"></i>
                  </button>
             </div>
@@ -379,10 +541,62 @@ export default function AnalyticsDashboard() {
             </div>
         ) : (
             <div className="animate__animated animate__fadeIn">
+            {/* Client Overview Section */}
+            {clientData && viewMode === 'dashboard' && (
+                <div className="card border-0 shadow-sm mb-4" style={{ borderRadius: '16px' }}>
+                    <div className="card-body p-4">
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                            <div className="d-flex align-items-center justify-content-center" style={{ width: '48px', height: '48px', backgroundColor: '#e0f2fe', borderRadius: '12px', color: '#0ea5e9' }}>
+                                <i className="feather-user fs-4"></i>
+                            </div>
+                            <div>
+                                <h5 className="mb-0 fw-bold text-dark">{clientData.client?.companyName || clientData.client?.username}</h5>
+                                <p className="text-muted small mb-0">Client Overview</p>
+                            </div>
+                        </div>
+                        <div className="row g-3">
+                            <div className="col-md-3">
+                                <div className="text-center p-3 bg-light rounded">
+                                    <h6 className="text-muted small mb-1">Total Campaigns</h6>
+                                    <h4 className="mb-0 fw-bold text-primary">{clientData.totalCampaigns}</h4>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="text-center p-3 bg-light rounded">
+                                    <h6 className="text-muted small mb-1">Total Spend</h6>
+                                    <h4 className="mb-0 fw-bold text-success">{formatCurrency(clientData.totalSpend)}</h4>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="text-center p-3 bg-light rounded">
+                                    <h6 className="text-muted small mb-1">Last Upload</h6>
+                                    <h4 className="mb-0 fw-bold text-info">{clientData.lastUpload || 'Never'}</h4>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="text-center p-3 bg-light rounded">
+                                    <h6 className="text-muted small mb-1">Status</h6>
+                                    <h4 className="mb-0 fw-bold text-warning">
+                                        <span className="badge bg-warning-subtle text-warning rounded-pill px-3">
+                                            <i className="feather-activity"></i> Active
+                                        </span>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Quick Actions / Filters */}
             <div className="card border-0 shadow-sm mb-4" style={{ borderRadius: '12px' }}>
                 <div className="card-body p-3 d-flex flex-wrap gap-3 align-items-center justify-content-between">
                     <div className="d-flex gap-2">
+                        <button 
+                            className={`btn fw-bold px-4 ${dateFilter === 'all' ? 'btn-primary' : 'btn-light text-muted'}`}
+                            onClick={() => setDateFilter('all')}
+                            style={{ borderRadius: '8px' }}
+                        >All</button>
                         <button 
                             className={`btn fw-bold px-4 ${dateFilter === 'month' ? 'btn-primary' : 'btn-light text-muted'}`}
                             onClick={() => setDateFilter('month')}
@@ -416,6 +630,15 @@ export default function AnalyticsDashboard() {
                         )}
                         <button className="btn btn-light text-primary fw-bold ms-2" style={{ borderRadius: '8px' }}>
                             <i className="feather-download me-2"></i>Export Data
+                        </button>
+                        <button 
+                            className="btn btn-warning text-white fw-bold ms-2" 
+                            onClick={loadSampleData}
+                            disabled={loadingSampleData}
+                            style={{ borderRadius: '8px' }}
+                        >
+                            <i className="feather-database me-2"></i>
+                            {loadingSampleData ? 'Loading...' : 'Load Sample Data'}
                         </button>
                     </div>
                 </div>

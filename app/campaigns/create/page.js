@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 import PageHeader from "../../../components/PageHeader";
+import ClientSelector from "../../../components/ClientSelector";
 
 const DIMENSION_FIELD_DEFINITIONS = [
   { key: "platform", patterns: ["platform", "channel", "network", "publisher"] },
@@ -150,6 +151,14 @@ export default function CampaignsCreate() {
       setClientCampaigns([]);
     }
   }, [selectedClientId]);
+
+  const handleClientDataChange = (clientData) => {
+    if (clientData) {
+      console.log("📊 Client data populated in create page:", clientData);
+      // Update client campaigns with the latest data from ClientSelector
+      setClientCampaigns(clientData.campaigns);
+    }
+  };
 
   const fetchClientCampaigns = async (clientId) => {
     setLoadingCampaigns(true);
@@ -870,44 +879,13 @@ export default function CampaignsCreate() {
                 width: "100%",
               }}
             >
-              {/* Client Selection */}
-              <div style={{ marginBottom: "24px" }}>
-                <label
-                  style={{
-                    color: "#222",
-                    fontWeight: "600",
-                    fontSize: "1.08rem",
-                    marginBottom: "8px",
-                    display: "block",
-                  }}
-                >
-                  Select Client
-                  <span className="text-danger" style={{ marginLeft: "4px" }}>
-                    *
-                  </span>
-                </label>
-                <select
-                  value={selectedClientId}
-                  onChange={(e) => setSelectedClientId(e.target.value)}
-                  disabled={loading || saving}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    fontSize: "1.08rem",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "8px",
-                    background: "#fff",
-                    color: "#222",
-                  }}
-                >
-                  <option value="">-- Select a client --</option>
-                  {clients.map((client) => (
-                    <option key={client._id} value={client._id}>
-                      {client.companyName || client.username}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Enhanced Client Selection */}
+              <ClientSelector
+                onClientSelect={(clientId) => setSelectedClientId(clientId)}
+                onClientDataChange={handleClientDataChange}
+                showCurrentData={true} // Show overview in create page
+                disabled={loading || saving}
+              />
 
               {/* Currently Added Data Section */}
               {selectedClientId && (

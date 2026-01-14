@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import PageHeader from "../../../components/PageHeader";
+import ClientSelector from "../../../components/ClientSelector";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
@@ -59,6 +60,14 @@ export default function CampaignsAll() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleClientDataChange = (clientData) => {
+    if (clientData) {
+      console.log("📊 Client data populated:", clientData);
+      // The campaigns are already being fetched by the existing useEffect
+      // This handler can be used for additional client-specific logic
+    }
+  };
 
   const fetchClients = async () => {
     try {
@@ -1020,140 +1029,109 @@ export default function CampaignsAll() {
           }}
         >
           <div className="campaigns-content-wrapper" style={{ width: "100%", maxWidth: "1600px", margin: "0 auto" }}>
-            {/* Client Selection Card */}
-            <div
-              style={{
-                background: "#fff",
-                boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
-                borderRadius: "12px",
-                padding: "24px",
-                marginBottom: "24px",
-                display: "flex",
-                gap: "16px",
-                alignItems: "flex-end",
-                flexWrap: "wrap",
+            {/* Enhanced Client Selection */}
+            <ClientSelector
+              onClientSelect={(clientId) => {
+                setSelectedClientId(clientId);
+                setSelectedCampaignId("");
               }}
-            >
-              <div style={{ flex: "1", minWidth: "200px" }}>
-                <label
-                  style={{
-                    color: "#222",
-                    fontWeight: "600",
-                    fontSize: "1.08rem",
-                    marginBottom: "8px",
-                    display: "block",
-                  }}
-                >
-                  Select Client
-                </label>
-                <select
-                  value={selectedClientId}
-                  onChange={(e) => {
-                    setSelectedClientId(e.target.value);
-                    setSelectedCampaignId("");
-                  }}
-                  disabled={loading}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    fontSize: "1.08rem",
-                    border: "1px solid #e0e0e0",
-                    borderRadius: "8px",
-                    background: "#fff",
-                    color: "#222",
-                  }}
-                >
-                  <option value="">-- Select a client --</option>
-                  {clients.map((client) => (
-                    <option key={client._id} value={client._id}>
-                      {client.companyName || client.username}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              onClientDataChange={handleClientDataChange}
+              showCurrentData={false} // Don't show overview since we have detailed analytics below
+              disabled={loading}
+            />
 
-              {selectedClientId && campaigns.length > 0 && (
-                <div style={{ flex: "1", minWidth: "200px" }}>
-                  <label
-                    style={{
-                      color: "#222",
-                      fontWeight: "600",
-                      fontSize: "1.08rem",
-                      marginBottom: "8px",
-                      display: "block",
-                    }}
-                  >
-                    Select Campaign
-                  </label>
-                  <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
-                    <select
-                      value={selectedCampaignId || "all"}
-                      onChange={(e) => setSelectedCampaignId(e.target.value)}
-                      style={{
-                        flex: "1",
-                        padding: "12px",
-                        fontSize: "1.08rem",
-                        border: "1px solid #e0e0e0",
-                        borderRadius: "8px",
-                        background: "#fff",
-                        color: "#222",
-                      }}
-                    >
-                      <option value="all">All Campaigns</option>
-                      {campaigns.map((campaign) => (
-                        <option key={campaign._id} value={campaign._id}>
-                          {campaign.fileName}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={handleDeleteClick}
-                      disabled={!selectedCampaignId || selectedCampaignId === "all" || deleting}
-                      style={{
-                        padding: "12px 20px",
-                        fontSize: "1.08rem",
-                        border: "none",
-                        borderRadius: "8px",
-                        background: deleting ? "#ccc" : "#ef4444",
-                        color: "#fff",
-                        cursor: deleting || !selectedCampaignId || selectedCampaignId === "all" ? "not-allowed" : "pointer",
-                        fontWeight: "600",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        whiteSpace: "nowrap",
-                        opacity: deleting || !selectedCampaignId || selectedCampaignId === "all" ? 0.6 : 1,
-                        transition: "all 0.2s",
-                      }}
-                      title="Delete selected campaign"
-                    >
-                      <i className="feather-trash-2" style={{ fontSize: "1rem" }}></i>
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <Link
-                href="/campaigns/create"
+            {/* Campaign Selection - Only show when client is selected */}
+            {selectedClientId && campaigns.length > 0 && (
+              <div
                 style={{
-                  display: "inline-block",
-                  padding: "12px 24px",
-                  background: "linear-gradient(90deg,#667eea 0%,#764ba2 100%)",
-                  color: "#fff",
-                  textDecoration: "none",
-                  borderRadius: "8px",
-                  fontWeight: "600",
-                  fontSize: "1.08rem",
-                  boxShadow: "0 4px 16px rgba(102,126,234,0.15)",
-                  transition: "all 0.2s",
-                  whiteSpace: "nowrap",
+                  background: "#fff",
+                  boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+                  borderRadius: "12px",
+                  padding: "24px",
+                  marginBottom: "24px",
                 }}
               >
-                <i className="feather-plus me-2"></i>
-                Create Campaign
-              </Link>
-            </div>
+                <div style={{ display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
+                  <div style={{ flex: "1", minWidth: "200px" }}>
+                    <label
+                      style={{
+                        color: "#222",
+                        fontWeight: "600",
+                        fontSize: "1.08rem",
+                        marginBottom: "8px",
+                        display: "block",
+                      }}
+                    >
+                      Select Campaign
+                    </label>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "stretch" }}>
+                      <select
+                        value={selectedCampaignId || "all"}
+                        onChange={(e) => setSelectedCampaignId(e.target.value)}
+                        style={{
+                          flex: "1",
+                          padding: "12px",
+                          fontSize: "1.08rem",
+                          border: "1px solid #e0e0e0",
+                          borderRadius: "8px",
+                          background: "#fff",
+                          color: "#222",
+                        }}
+                      >
+                        <option value="all">All Campaigns</option>
+                        {campaigns.map((campaign) => (
+                          <option key={campaign._id} value={campaign._id}>
+                            {campaign.fileName}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={handleDeleteClick}
+                        disabled={!selectedCampaignId || selectedCampaignId === "all" || deleting}
+                        style={{
+                          padding: "12px 20px",
+                          fontSize: "1.08rem",
+                          border: "none",
+                          borderRadius: "8px",
+                          background: deleting ? "#ccc" : "#ef4444",
+                          color: "#fff",
+                          cursor: deleting || !selectedCampaignId || selectedCampaignId === "all" ? "not-allowed" : "pointer",
+                          fontWeight: "600",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          whiteSpace: "nowrap",
+                          opacity: deleting || !selectedCampaignId || selectedCampaignId === "all" ? 0.6 : 1,
+                          transition: "all 0.2s",
+                        }}
+                        title="Delete selected campaign"
+                      >
+                        <i className="feather-trash-2" style={{ fontSize: "1rem" }}></i>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/campaigns/create"
+                    style={{
+                      display: "inline-block",
+                      padding: "12px 24px",
+                      background: "linear-gradient(90deg,#667eea 0%,#764ba2 100%)",
+                      color: "#fff",
+                      textDecoration: "none",
+                      borderRadius: "8px",
+                      fontWeight: "600",
+                      fontSize: "1.08rem",
+                      boxShadow: "0 4px 16px rgba(102,126,234,0.15)",
+                    }}
+                  >
+                    <i className="feather-plus" style={{ marginRight: "8px" }}></i>
+                    Create Campaign
+                  </Link>
+                </div>
+              </div>
+            )}
 
             {/* View Mode Toggle Section - Only show when "All Campaigns" is selected */}
             {selectedClientId && campaigns.length > 0 && selectedCampaignId === "all" && (

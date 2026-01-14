@@ -1,0 +1,26 @@
+{
+  "name": "admin-dashboard-nextjs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "node setup-assets.js",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "apexcharts": "^4.0.0",
+    "mongodb": "^7.0.0",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "recharts": "^3.4.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-next": "^14.0.0"
+  }
+}

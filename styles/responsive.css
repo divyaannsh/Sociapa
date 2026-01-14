@@ -1,0 +1,427 @@
+/* Responsive Styles for Next.js Dashboard */
+
+/* Base container responsiveness */
+.nxl-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.nxl-content {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 0 15px;
+}
+
+/* Prevent horizontal overflow */
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Main content area responsive */
+.main-content {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.main-content .row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.main-content .row > [class*="col-"] {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Card responsiveness */
+.card {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-body {
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.card-header {
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
+/* Text overflow handling */
+.nxl-mtext,
+.page-header-title h5,
+.card-title,
+.breadcrumb,
+.page-header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Page Header responsiveness */
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.page-header-left {
+  flex: 1 1 auto;
+  min-width: 200px;
+  max-width: 100%;
+}
+
+.page-header-right {
+  flex: 0 1 auto;
+  min-width: 200px;
+}
+
+.page-header-title h5 {
+  font-size: clamp(16px, 2vw, 20px);
+  margin-bottom: 8px;
+}
+
+.breadcrumb {
+  flex-wrap: wrap;
+  overflow: visible;
+  white-space: normal;
+}
+
+.breadcrumb-item {
+  white-space: nowrap;
+}
+
+/* Navigation responsiveness */
+.nxl-navigation {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.nxl-navbar {
+  max-width: 100%;
+}
+
+.nxl-item {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.nxl-link {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+}
+
+.nxl-mtext {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nxl-submenu {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.nxl-submenu .nxl-link {
+  padding: 8px 15px 8px 40px;
+}
+
+/* Header responsiveness */
+.nxl-header {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.header-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 15px;
+  box-sizing: border-box;
+}
+
+.header-left,
+.header-right {
+  flex: 1 1 auto;
+  min-width: 150px;
+}
+
+/* Table responsiveness */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  table-layout: auto;
+}
+
+table td,
+table th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+}
+
+/* Form responsiveness */
+.form-control,
+.form-select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row,
+.form-group {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Button responsiveness */
+.btn {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.btn-group {
+  flex-wrap: wrap;
+}
+
+/* Image responsiveness */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive breakpoints */
+
+/* Extra small devices (phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .nxl-content {
+    padding: 0 10px;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .page-header-left,
+  .page-header-right {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .header-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-left,
+  .header-right {
+    width: 100%;
+  }
+
+  .nxl-navigation {
+    width: 100%;
+  }
+
+  .nxl-mtext {
+    font-size: 14px;
+  }
+
+  .card {
+    margin-bottom: 15px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+  }
+
+  .display-6 {
+    font-size: 1.5rem !important;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .nxl-content {
+    padding: 0 12px;
+  }
+
+  .main-content {
+    padding: 12px;
+  }
+
+  .page-header {
+    padding: 12px;
+  }
+
+  .nxl-mtext {
+    font-size: 14px;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .nxl-content {
+    padding: 0 15px;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+
+  .page-header {
+    padding: 15px;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .nxl-content {
+    padding: 0 20px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl,
+  .container-xxl {
+    max-width: 100%;
+  }
+}
+
+/* Mobile menu toggle */
+@media (max-width: 991.98px) {
+  .nxl-navigation {
+    position: fixed;
+    left: -100%;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .nxl-navigation.mobile-open {
+    left: 0;
+  }
+
+  .nxl-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Prevent text overflow in all containers */
+* {
+  box-sizing: border-box;
+}
+
+.container,
+.container-fluid,
+.row,
+[class*="col-"] {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Dashboard specific responsive fixes */
+.d-flex {
+  flex-wrap: wrap;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.gap-2,
+.gap-4 {
+  gap: 10px;
+}
+
+/* Responsive text utilities */
+@media (max-width: 575.98px) {
+  .fs-4 {
+    font-size: 1.25rem !important;
+  }
+
+  .fs-11 {
+    font-size: 0.75rem !important;
+  }
+
+  h1, .h1 {
+    font-size: 1.75rem;
+  }
+
+  h2, .h2 {
+    font-size: 1.5rem;
+  }
+
+  h3, .h3 {
+    font-size: 1.25rem;
+  }
+
+  h4, .h4 {
+    font-size: 1.1rem;
+  }
+
+  h5, .h5 {
+    font-size: 1rem;
+  }
+
+  h6, .h6 {
+    font-size: 0.9rem;
+  }
+}
+

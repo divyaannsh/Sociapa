@@ -8,7 +8,7 @@ export async function POST(request) {
 
     // Simple hardcoded check for demonstration
     // In a real app, you'd check against a database and hash passwords
-    if (username === 'admin' && password === 'admin123') {
+    if (username === 'admin' && password === 'sociapa') {
       // Set a cookie
       cookies().set('admin_token', 'valid_token', {
         httpOnly: true,

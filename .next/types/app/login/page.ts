@@ -1,4 +1,4 @@
-// File: /Users/divyanshsrivastava/Downloads/ads-dashboard-divyansh/app/login/page.js
+// File: D:\DEV\Sociapa\DIVYANSH\all-codes\ads\app\login\page.js
 import * as entry from '../../../../app/login/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

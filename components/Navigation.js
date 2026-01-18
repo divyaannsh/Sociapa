@@ -168,6 +168,16 @@ const Navigation = () => {
                       View/Edit/Delete Campaigns
                     </Link>
                   </li>
+                  <li className="nxl-item">
+                    <Link
+                      href="/analytics/dashboard"
+                      className={`nxl-link ${
+                        isActive("/analytics/dashboard") ? "active" : ""
+                      }`}
+                    >
+                      Dashboard Layout 2
+                    </Link>
+                  </li>
                 </ul>
               )}
             </li>

@@ -1,4 +1,4 @@
-// File: /Users/divyanshsrivastava/Downloads/ads-dashboard-divyansh/app/api/auth/verify/route.js
+// File: D:\DEV\Sociapa\DIVYANSH\all-codes\ads\app\api\auth\verify\route.js
 import * as entry from '../../../../../../app/api/auth/verify/route.js'
 import type { NextRequest } from 'next/server.js'
 

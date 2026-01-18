@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"app\\\\campaigns\\\\all\\\\page.js -> ./ChartWrapper\":{\"id\":\"app\\\\campaigns\\\\all\\\\page.js -> ./ChartWrapper\",\"files\":[\"static/chunks/_app-pages-browser_app_campaigns_all_ChartWrapper_js.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{}"

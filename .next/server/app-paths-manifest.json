@@ -1,8 +1,6 @@
 {
   "/page": "app/page.js",
-  "/analytics/dashboard/page": "app/analytics/dashboard/page.js",
-  "/clients/create/page": "app/clients/create/page.js",
+  "/api/auth/verify/route": "app/api/auth/verify/route.js",
   "/login/page": "app/login/page.js",
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/campaigns/all/page": "app/campaigns/all/page.js"
+  "/api/auth/logout/route": "app/api/auth/logout/route.js"
 }

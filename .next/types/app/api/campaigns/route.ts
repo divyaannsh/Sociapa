@@ -1,4 +1,4 @@
-// File: D:\DEV\Sociapa\DIVYANSH\all-codes\ads\app\api\campaigns\route.js
+// File: /Users/divyanshsrivastava/Downloads/ads-dashboard-divyansh/app/api/campaigns/route.js
 import * as entry from '../../../../../app/api/campaigns/route.js'
 import type { NextRequest } from 'next/server.js'
 

@@ -17,7 +17,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 
 export default function AnalyticsDashboard() {
   const router = useRouter();
-  const { isAuthenticated, loading, requireAuth, logout } = useAuth();
+  const { isAuthenticated, loading, requireAuth } = useAuth();
   const [clients, setClients] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState('');
   const [campaigns, setCampaigns] = useState([]);
@@ -29,6 +29,11 @@ export default function AnalyticsDashboard() {
 
   const [clientData, setClientData] = useState(null);
   const [loadingSampleData, setLoadingSampleData] = useState(false);
+
+  // CPM Editing State
+  const [editingCPM, setEditingCPM] = useState(null);
+  const [cpmEditValue, setCpmEditValue] = useState("");
+  const [updatingCPM, setUpdatingCPM] = useState(false);
 
   // New State for Comparison
   const [viewMode, setViewMode] = useState('dashboard'); // 'dashboard' | 'comparison'
@@ -54,9 +59,7 @@ export default function AnalyticsDashboard() {
           const clientsData = data.clients || [];
           console.log("📊 Analytics Dashboard - Clients fetched:", clientsData);
           setClients(clientsData);
-          if (clientsData && clientsData.length > 0) {
-            setSelectedClientId(clientsData[0]._id);
-          }
+          // Don't auto-select a client - let user choose
         }
       } catch (err) {
         console.error('❌ Analytics Dashboard - Error fetching clients:', err);
@@ -157,6 +160,43 @@ export default function AnalyticsDashboard() {
       alert('Error loading sample data');
     } finally {
       setLoadingSampleData(false);
+    }
+  };
+
+  // CPM Editing Functions
+  const handleCPMEdit = (platform, currentCPM) => {
+    setEditingCPM(platform);
+    setCpmEditValue(currentCPM.toString());
+  };
+
+  const handleCPMCancel = () => {
+    setEditingCPM(null);
+    setCpmEditValue("");
+  };
+
+  const handleCPMSave = async (platform) => {
+    const newCPM = parseFloat(cpmEditValue);
+    
+    if (isNaN(newCPM) || newCPM < 0) {
+      alert('Please enter a valid CPM value');
+      return;
+    }
+    
+    setUpdatingCPM(true);
+    try {
+      // Here you would typically make an API call to update the CPM in the database
+      // For now, we'll just update the local state
+      console.log(`Updating CPM for ${platform} to ${newCPM}`);
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        setEditingCPM(null);
+        setCpmEditValue("");
+        setUpdatingCPM(false);
+      }, 500);
+    } catch (error) {
+      console.error('Error updating CPM:', error);
+      setUpdatingCPM(false);
     }
   };
 
@@ -343,6 +383,44 @@ export default function AnalyticsDashboard() {
     return { spend, impressions, clicks, avgCPM, avgCPC };
   }, [filteredData]);
 
+  // Calculate platform performance from filtered data
+  const platformPerformanceData = useMemo(() => {
+    if (!filteredData.length) return [];
+    
+    const platformData = {};
+    
+    filteredData.forEach(row => {
+      const platform = (row["Platform"] || row["platform"] || "Unknown").toLowerCase();
+      const spend = parseFloat(row["Amount spent (INR)"] || row["Amount spent"] || 0);
+      const impressions = parseFloat(row["Impressions"] || 0);
+      const clicks = parseFloat(row["Clicks (all)"] || row["Clicks"] || 0);
+      const engagements = parseFloat(row["Engagements"] || 0);
+      const cpm = parseFloat(row["CPM (cost per 1,000 impressions)"] || row["CPM"] || 0);
+      const cpc = parseFloat(row["CPC (all)"] || row["CPC"] || 0);
+
+      if (!platformData[platform]) {
+        platformData[platform] = {
+          name: platform.charAt(0).toUpperCase() + platform.slice(1),
+          spend: 0,
+          impressions: 0,
+          clicks: 0,
+          engagements: 0,
+          cpm: 0,
+          cpc: 0
+        };
+      }
+
+      platformData[platform].spend += spend;
+      platformData[platform].impressions += impressions;
+      platformData[platform].clicks += clicks;
+      platformData[platform].engagements += engagements;
+      platformData[platform].cpm = cpm;
+      platformData[platform].cpc = cpc;
+    });
+
+    return Object.values(platformData);
+  }, [filteredData]);
+
   // Chart Data Preparation (Single Client)
   const chartData = useMemo(() => {
     const map = new Map();
@@ -421,9 +499,6 @@ export default function AnalyticsDashboard() {
                         compact={true} // Add compact prop for smaller display in header
                      />
                  )}
-                 <button className="btn btn-light text-danger fw-bold" onClick={logout} style={{ borderRadius: '12px' }}>
-                    <i className="feather-log-out"></i>
-                 </button>
             </div>
         </div>
 
@@ -541,8 +616,29 @@ export default function AnalyticsDashboard() {
             </div>
         ) : (
             <div className="animate__animated animate__fadeIn">
-            {/* Client Overview Section */}
-            {clientData && viewMode === 'dashboard' && (
+            {/* Show message when no client is selected */}
+            {!selectedClientId && (
+                <div className="card border-0 shadow-sm mb-5" style={{ borderRadius: '16px' }}>
+                    <div className="card-body p-5 text-center">
+                        <div className="d-flex justify-content-center mb-4">
+                            <div className="d-flex align-items-center justify-content-center" style={{ width: '80px', height: '80px', backgroundColor: '#f3f4f6', borderRadius: '50%', color: '#9ca3af' }}>
+                                <i className="feather-user fs-1"></i>
+                            </div>
+                        </div>
+                        <h3 className="fw-bold text-dark mb-3">Please select client to get started</h3>
+                        <p className="text-muted mb-4">Choose a client from the dropdown above to view their analytics dashboard and performance metrics.</p>
+                        <div className="d-flex justify-content-center">
+                            <div className="badge bg-light text-muted px-4 py-2 rounded-pill">
+                                <i className="feather-arrow-up me-2"></i>
+                                Select client from above
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Client Overview Section - Only show when client is selected */}
+            {selectedClientId && clientData && viewMode === 'dashboard' && (
                 <div className="card border-0 shadow-sm mb-4" style={{ borderRadius: '16px' }}>
                     <div className="card-body p-4">
                         <div className="d-flex align-items-center gap-3 mb-3">
@@ -588,7 +684,8 @@ export default function AnalyticsDashboard() {
                 </div>
             )}
 
-            {/* Quick Actions / Filters */}
+            {/* Quick Actions / Filters - Only show when client is selected */}
+            {selectedClientId && (
             <div className="card border-0 shadow-sm mb-4" style={{ borderRadius: '12px' }}>
                 <div className="card-body p-3 d-flex flex-wrap gap-3 align-items-center justify-content-between">
                     <div className="d-flex gap-2">
@@ -643,8 +740,10 @@ export default function AnalyticsDashboard() {
                     </div>
                 </div>
             </div>
+            )}
 
-            {/* KPI Cards */}
+            {/* KPI Cards - Only show when client is selected */}
+            {selectedClientId && (
             <div className="row g-4 mb-5">
                 {/* Total Spend */}
                 <div className="col-xl-3 col-md-6">
@@ -718,8 +817,10 @@ export default function AnalyticsDashboard() {
                     </div>
                 </div>
             </div>
+            )}
 
-            {/* Charts Section */}
+            {/* Charts Section - Only show when client is selected */}
+            {selectedClientId && (
             <div className="row g-4 mb-4">
                 <div className="col-lg-8">
                     <div className="card border-0 shadow-sm h-100" style={{ borderRadius: '16px' }}>
@@ -785,8 +886,10 @@ export default function AnalyticsDashboard() {
                     </div>
                 </div>
             </div>
+            )}
             
-            {/* Detailed Table */}
+            {/* Detailed Table - Only show when client is selected */}
+            {selectedClientId && (
             <div className="card border-0 shadow-sm mb-4" style={{ borderRadius: '16px' }}>
                 <div className="card-header bg-white border-0 p-4">
                     <h5 className="mb-0 fw-bold">Detailed Report</h5>
@@ -840,6 +943,156 @@ export default function AnalyticsDashboard() {
                     </table>
                 </div>
             </div>
+            )}
+            
+            {/* Performance by Platform Section */}
+            {selectedClientId && filteredData.length > 0 && (
+              <div
+                style={{
+                  background: "#fff",
+                  boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+                  borderRadius: "12px",
+                  padding: "32px",
+                  marginBottom: "24px",
+                }}
+              >
+                <div style={{ marginBottom: "24px" }}>
+                  <h2
+                    style={{
+                      color: "#222",
+                      fontWeight: "700",
+                      fontSize: "1.5rem",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Performance by Platform
+                  </h2>
+                  <p
+                    style={{
+                      color: "#666",
+                      fontSize: "0.95rem",
+                      margin: 0,
+                    }}
+                  >
+                    Compare performance metrics across different advertising platforms.
+                  </p>
+                </div>
+
+                <div style={{ overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead>
+                      <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
+                        <th style={{ padding: "12px", textAlign: "left", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>Platform</th>
+                        <th style={{ padding: "12px", textAlign: "right", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>Spend</th>
+                        <th style={{ padding: "12px", textAlign: "right", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>Impressions</th>
+                        <th style={{ padding: "12px", textAlign: "right", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>Clicks</th>
+                        <th style={{ padding: "12px", textAlign: "right", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>Engagements</th>
+                        <th style={{ padding: "12px", textAlign: "right", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>CPM</th>
+                        <th style={{ padding: "12px", textAlign: "right", color: "#666", fontWeight: "600", fontSize: "0.9rem" }}>CPC</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {platformPerformanceData.map((platform, index) => (
+                        <tr key={index} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                          <td style={{ padding: "12px", fontWeight: "600", color: "#222" }}>{platform.name}</td>
+                          <td style={{ padding: "12px", textAlign: "right", color: "#222" }}>{formatCurrency(platform.spend)}</td>
+                          <td style={{ padding: "12px", textAlign: "right", color: "#222" }}>{formatNumber(platform.impressions)}</td>
+                          <td style={{ padding: "12px", textAlign: "right", color: "#222" }}>{formatNumber(platform.clicks)}</td>
+                          <td style={{ padding: "12px", textAlign: "right", color: "#222" }}>{formatNumber(platform.engagements)}</td>
+                          <td style={{ padding: "12px", textAlign: "right", color: "#222", position: "relative" }}>
+                            {editingCPM === platform.name ? (
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "flex-end" }}>
+                                <input
+                                  type="number"
+                                  value={cpmEditValue}
+                                  onChange={(e) => setCpmEditValue(e.target.value)}
+                                  disabled={updatingCPM}
+                                  style={{
+                                    width: "80px",
+                                    padding: "4px 8px",
+                                    fontSize: "0.9rem",
+                                    border: "1px solid #667eea",
+                                    borderRadius: "4px",
+                                    textAlign: "right",
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      handleCPMSave(platform.name);
+                                    } else if (e.key === "Escape") {
+                                      handleCPMCancel();
+                                    }
+                                  }}
+                                  autoFocus
+                                />
+                                <button
+                                  onClick={() => handleCPMSave(platform.name)}
+                                  disabled={updatingCPM}
+                                  style={{
+                                    padding: "4px 8px",
+                                    background: "#10b981",
+                                    color: "#fff",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    cursor: updatingCPM ? "not-allowed" : "pointer",
+                                    fontSize: "0.85rem",
+                                    opacity: updatingCPM ? 0.6 : 1,
+                                  }}
+                                  title="Save"
+                                >
+                                  <i className="feather-check" style={{ fontSize: "0.85rem" }}></i>
+                                </button>
+                                <button
+                                  onClick={handleCPMCancel}
+                                  disabled={updatingCPM}
+                                  style={{
+                                    padding: "4px 8px",
+                                    background: "#ef4444",
+                                    color: "#fff",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    cursor: updatingCPM ? "not-allowed" : "pointer",
+                                    fontSize: "0.85rem",
+                                    opacity: updatingCPM ? 0.6 : 1,
+                                  }}
+                                  title="Cancel"
+                                >
+                                  <i className="feather-x" style={{ fontSize: "0.85rem" }}></i>
+                                </button>
+                              </div>
+                            ) : (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "6px",
+                                  justifyContent: "flex-end",
+                                  cursor: "pointer",
+                                  padding: "4px 8px",
+                                  borderRadius: "4px",
+                                  transition: "background 0.2s",
+                                }}
+                                onClick={() => handleCPMEdit(platform.name, platform.cpm)}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = "#f3f4f6";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = "transparent";
+                                }}
+                                title="Click to edit CPM"
+                              >
+                                <span>{formatCurrency(platform.cpm)}</span>
+                                <i className="feather-edit-2" style={{ fontSize: "0.75rem", color: "#666", opacity: 0.7 }}></i>
+                              </div>
+                            )}
+                          </td>
+                          <td style={{ padding: "12px", textAlign: "right", color: "#222" }}>{formatCurrency(platform.cpc)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
             </div>
         )}
       </div>

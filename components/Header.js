@@ -2,9 +2,11 @@
 
 import { useEffect } from "react";
 import { usePathname } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Header() {
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   useEffect(() => {
     // Initialize Bootstrap dropdowns and other interactive elements
@@ -31,7 +33,16 @@ export default function Header() {
         {/* Header Right */}
         <div className="header-right ms-auto">
           <div className="d-flex align-items-center">
-            {/* Global search removed per request; page-level search will be used instead */}
+            {/* Logout Button */}
+            <button 
+              className="btn btn-light text-danger fw-bold" 
+              onClick={logout} 
+              style={{ borderRadius: '8px' }}
+              title="Logout"
+            >
+              <i className="feather-log-out"></i>
+              <span className="d-none d-md-inline ms-2">Logout</span>
+            </button>
           </div>
         </div>
       </div>

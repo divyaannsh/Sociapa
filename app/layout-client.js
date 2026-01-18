@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { PageTransitionProvider } from '../contexts/PageTransitionContext'
 import PageTransitionLoader from '../components/PageTransitionLoader'
-import { AuthProvider } from '../contexts/AuthContext'
 
 export default function LayoutClient({ children }) {
   const pathname = usePathname()
@@ -139,12 +138,10 @@ export default function LayoutClient({ children }) {
   }, [pathname])
 
   return (
-    <AuthProvider>
-      <PageTransitionProvider>
-        <PageTransitionLoader />
-        {children}
-      </PageTransitionProvider>
-    </AuthProvider>
+    <PageTransitionProvider>
+      <PageTransitionLoader />
+      {children}
+    </PageTransitionProvider>
   )
 }
 

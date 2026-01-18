@@ -2,6 +2,7 @@ import Navigation from '../components/Navigation'
 import Header from '../components/Header'
 import LayoutClient from './layout-client'
 import Script from 'next/script'
+import { AuthProvider } from '../contexts/AuthContext'
 import '../styles/index.css'
 
 export const metadata = {
@@ -37,13 +38,15 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
       </head>
       <body>
-        <Navigation />
-        <Header />
-        <main className="nxl-container">
-          <div className="nxl-content">
-            <LayoutClient>{children}</LayoutClient>
-          </div>
-        </main>
+        <AuthProvider>
+          <Navigation />
+          <Header />
+          <main className="nxl-container">
+            <div className="nxl-content">
+              <LayoutClient>{children}</LayoutClient>
+            </div>
+          </main>
+        </AuthProvider>
 
         {/* Vendors JS */}
         <Script src="/assets/vendors/js/vendors.min.js" strategy="beforeInteractive" />

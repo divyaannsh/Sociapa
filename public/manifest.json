@@ -1,0 +1,27 @@
+{
+    "name": "Sociapa Ads Dashboard",
+    "short_name": "Sociapa",
+    "description": "Multi-client advertising analytics dashboard",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f1117",
+    "theme_color": "#667eea",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/assets/images/logoSociapa.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/images/logoSociapa.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "categories": [
+        "business",
+        "productivity"
+    ],
+    "lang": "en"
+}

@@ -65,7 +65,7 @@ export default function LayoutClient({ children }) {
       if (typeof window !== 'undefined' && window.commonInit) {
         window.commonInit()
       }
-      
+
       // Ensure sidebar stays closed after scripts load
       if (typeof window !== 'undefined' && typeof document !== 'undefined') {
         document.documentElement.classList.add('minimenu')

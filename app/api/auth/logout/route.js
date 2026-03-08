@@ -1,18 +1,20 @@
 import { cookies } from 'next/headers';
+import { logAudit } from '../../../../lib/auth';
 
 export async function POST(request) {
   try {
-    // Clear the authentication cookie
-    cookies().delete('admin_token');
+    const cookieStore = cookies();
+    const username = cookieStore.get('session_user')?.value || 'unknown';
 
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    await logAudit('LOGOUT', `User logged out: ${username}`, username);
+
+    cookieStore.delete('admin_token');
+    cookieStore.delete('session_user');
+    cookieStore.delete('user_role');
+    cookieStore.delete('client_id');
+
+    return Response.json({ success: true });
   } catch (error) {
-    return new Response(JSON.stringify({ message: 'Logout failed' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return Response.json({ message: 'Error logging out' }, { status: 500 });
   }
 }

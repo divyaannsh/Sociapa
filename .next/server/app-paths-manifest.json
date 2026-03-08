@@ -1,8 +1,9 @@
 {
-  "/page": "app/page.js",
-  "/api/clients/route": "app/api/clients/route.js",
-  "/api/analytics/clients/route": "app/api/analytics/clients/route.js",
-  "/analytics/dashboard/page": "app/analytics/dashboard/page.js",
-  "/api/campaigns/route": "app/api/campaigns/route.js",
-  "/api/auth/verify/route": "app/api/auth/verify/route.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/analytics/funnel/page": "app/analytics/funnel/page.js",
+  "/notifications/page": "app/notifications/page.js",
+  "/analytics/comparison/page": "app/analytics/comparison/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/analytics/heatmap/page": "app/analytics/heatmap/page.js",
+  "/page": "app/page.js"
 }

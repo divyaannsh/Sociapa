@@ -1,0 +1,253 @@
+/* Dark Mode CSS - Sociapa Ads Dashboard */
+body.dark-mode {
+  --bs-body-bg: #0f1117;
+  --bs-body-color: #e2e8f0;
+  background-color: #0f1117 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Navigation */
+body.dark-mode .nxl-navigation {
+  background-color: #1a1d2e !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .nxl-navigation .nxl-link {
+  color: #a0aec0 !important;
+}
+body.dark-mode .nxl-navigation .nxl-link:hover,
+body.dark-mode .nxl-navigation .nxl-link.active {
+  color: #667eea !important;
+  background: rgba(102,126,234,0.1) !important;
+}
+body.dark-mode .nxl-navigation .card {
+  background: #1e2235 !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .nxl-navigation .nxl-caption label {
+  color: #4a5568 !important;
+}
+
+/* Header */
+body.dark-mode .nxl-header {
+  background-color: #1a1d2e !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .nxl-header .nxl-head-link {
+  color: #a0aec0 !important;
+}
+body.dark-mode .nxl-header .nxl-head-link:hover {
+  color: #667eea !important;
+}
+
+/* Cards */
+body.dark-mode .card {
+  background-color: #1e2235 !important;
+  border-color: #2d3148 !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode .card-header {
+  background-color: #252841 !important;
+  border-color: #2d3148 !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode .card-footer {
+  background-color: #252841 !important;
+  border-color: #2d3148 !important;
+}
+
+/* Main content */
+body.dark-mode .nxl-content,
+body.dark-mode .main-content {
+  background-color: #0f1117 !important;
+}
+
+/* Tables */
+body.dark-mode .table {
+  color: #e2e8f0 !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .table th {
+  background-color: #252841 !important;
+  color: #a0aec0 !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .table td {
+  border-color: #2d3148 !important;
+}
+body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: rgba(255,255,255,0.02) !important;
+}
+body.dark-mode .table-hover > tbody > tr:hover {
+  background-color: rgba(102,126,234,0.08) !important;
+}
+
+/* Forms */
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background-color: #252841 !important;
+  border-color: #2d3148 !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25) !important;
+}
+body.dark-mode .form-control::placeholder {
+  color: #4a5568 !important;
+}
+body.dark-mode .form-label {
+  color: #a0aec0 !important;
+}
+body.dark-mode .input-group-text {
+  background-color: #2d3148 !important;
+  border-color: #3d4268 !important;
+  color: #a0aec0 !important;
+}
+
+/* Buttons */
+body.dark-mode .btn-light {
+  background-color: #252841 !important;
+  border-color: #2d3148 !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode .btn-outline-secondary {
+  border-color: #4a5568 !important;
+  color: #a0aec0 !important;
+}
+
+/* Dropdowns */
+body.dark-mode .dropdown-menu {
+  background-color: #1e2235 !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .dropdown-item {
+  color: #a0aec0 !important;
+}
+body.dark-mode .dropdown-item:hover {
+  background-color: rgba(102,126,234,0.1) !important;
+  color: #667eea !important;
+}
+body.dark-mode .dropdown-divider {
+  border-color: #2d3148 !important;
+}
+
+/* Badges and alerts */
+body.dark-mode .alert {
+  border-color: #2d3148 !important;
+}
+body.dark-mode .alert-light {
+  background-color: #252841 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Modals */
+body.dark-mode .modal-content {
+  background-color: #1e2235 !important;
+  border-color: #2d3148 !important;
+}
+body.dark-mode .modal-header {
+  border-color: #2d3148 !important;
+}
+body.dark-mode .modal-footer {
+  border-color: #2d3148 !important;
+}
+
+/* Text utilities */
+body.dark-mode .text-muted {
+  color: #4a5568 !important;
+}
+body.dark-mode .text-dark {
+  color: #e2e8f0 !important;
+}
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+  color: #e2e8f0 !important;
+}
+
+/* Breadcrumb */
+body.dark-mode .breadcrumb-item, 
+body.dark-mode .breadcrumb-item a {
+  color: #a0aec0 !important;
+}
+body.dark-mode .breadcrumb-item.active {
+  color: #667eea !important;
+}
+
+/* Page header */
+body.dark-mode .nxl-content-sidebar {
+  background-color: #1e2235 !important;
+  border-color: #2d3148 !important;
+}
+
+/* Custom scrollbar */
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #1a1d2e;
+}
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #2d3148;
+  border-radius: 4px;
+}
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #667eea;
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 8px !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #718096;
+  font-size: 1.1rem;
+  width: 36px;
+  height: 36px;
+}
+.dark-mode-toggle:hover {
+  background: rgba(102,126,234,0.1) !important;
+  color: #667eea !important;
+  transform: rotate(20deg);
+}
+body.dark-mode .dark-mode-toggle {
+  color: #f6e05e !important;
+}
+body.dark-mode .dark-mode-toggle:hover {
+  color: #fbd38d !important;
+  background: rgba(246,224,94,0.1) !important;
+}
+
+/* Role badge */
+.role-badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.role-badge.super-admin { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+.role-badge.manager { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #1a1a1a; }
+.role-badge.viewer { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #1a1a1a; }
+.role-badge.client { background: linear-gradient(135deg, #fa709a, #fee140); color: #1a1a1a; }
+
+/* Notification badge */
+.notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e53e3e;
+  color: white;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}

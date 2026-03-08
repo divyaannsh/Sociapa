@@ -1,9 +1,14 @@
 {
   "pages": {
-    "/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/login/page.js"
+    ],
+    "/login/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/login/layout.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -15,6 +20,36 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/analytics/dashboard/page.js"
+    ],
+    "/notifications/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/notifications/page.js"
+    ],
+    "/analytics/comparison/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/analytics/comparison/page.js"
+    ],
+    "/analytics/funnel/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/analytics/funnel/page.js"
+    ],
+    "/analytics/heatmap/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/analytics/heatmap/page.js"
+    ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

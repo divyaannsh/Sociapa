@@ -1,6 +1,5 @@
-
 import { NextResponse } from 'next/server'
- 
+
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
@@ -14,32 +13,27 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // Allow access to login page
-  if (pathname === '/login') {
+  // Allow access to login pages
+  if (pathname === '/login' || pathname === '/client-portal/login') {
     return NextResponse.next();
   }
 
-  // For all other routes, check authentication
+  const response = NextResponse.next();
+
+  // BYPASS LOGIN: Automatically inject super_admin cookies 
+  // if they are not present, instead of redirecting to /login
   const token = request.cookies.get('admin_token');
-  
   if (!token || token.value !== 'valid_token') {
-    // Redirect to login if no valid token
-    return NextResponse.redirect(new URL('/login', request.url));
+    response.cookies.set('admin_token', 'valid_token', { path: '/' });
+    response.cookies.set('session_user', 'admin', { path: '/' });
+    response.cookies.set('user_role', 'super_admin', { path: '/' });
   }
 
-  return NextResponse.next()
+  return response;
 }
- 
+
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - assets (static assets)
-     */
     '/((?!api|_next/static|_next/image|favicon.ico|assets).*)',
   ],
 }

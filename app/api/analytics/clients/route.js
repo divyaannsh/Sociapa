@@ -56,20 +56,25 @@ export async function GET(request) {
           const spend = parseFloat(row["Amount spent (INR)"] || row["Amount spent"] || 0) || 0;
           const impressions = parseFloat(row["Impressions"] || 0) || 0;
           const clicks = parseFloat(row["Clicks (all)"] || row["Clicks"] || 0) || 0;
+          
+          // Validate parsed values
+          const validSpend = !isNaN(spend) ? spend : 0;
+          const validImpressions = !isNaN(impressions) ? impressions : 0;
+          const validClicks = !isNaN(clicks) ? clicks : 0;
 
           // Update Totals
-          totalSpend += spend;
-          totalImpressions += impressions;
-          totalClicks += clicks;
+          totalSpend += validSpend;
+          totalImpressions += validImpressions;
+          totalClicks += validClicks;
 
           // Update Timeline
           if (!timelineMap.has(dateStr)) {
             timelineMap.set(dateStr, { spend: 0, impressions: 0, clicks: 0 });
           }
           const dayData = timelineMap.get(dateStr);
-          dayData.spend += spend;
-          dayData.impressions += impressions;
-          dayData.clicks += clicks;
+          dayData.spend += validSpend;
+          dayData.impressions += validImpressions;
+          dayData.clicks += validClicks;
         });
       });
 

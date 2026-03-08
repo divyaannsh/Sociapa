@@ -1,4 +1,5 @@
 import Script from 'next/script'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 
 export const metadata = {
   title: 'Admin Login - Sociapa Ads Dashboard',
@@ -7,31 +8,25 @@ export const metadata = {
 
 export default function LoginLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="icon"
-          type="image/x-icon"
-          href="/assets/images/logoSociapa.png"
-        />
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href="/assets/css/bootstrap.min.css"
-        />
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href="/assets/vendors/css/vendors.min.css"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-      </head>
-      <body>
-        {children}
+    <>
+      {/* Additional head elements for login page */}
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="/assets/css/bootstrap.min.css"
+      />
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="/assets/vendors/css/vendors.min.css"
+      />
 
-        {/* Vendors JS */}
-        <Script src="/assets/vendors/js/vendors.min.js" strategy="beforeInteractive" />
-      </body>
-    </html>
+      <ThemeProvider>
+        {children}
+      </ThemeProvider>
+
+      {/* Vendors JS */}
+      <Script src="/assets/vendors/js/vendors.min.js" strategy="beforeInteractive" />
+    </>
   )
 }

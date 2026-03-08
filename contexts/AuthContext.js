@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
@@ -8,24 +8,32 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null); // { username, role, clientId }
   const router = useRouter();
 
-  // Check authentication status on mount
   useEffect(() => {
     checkAuthStatus();
   }, []);
 
   const checkAuthStatus = async () => {
     try {
-      // Check if we have a valid token by making a request to a protected route
-      // or by checking cookies directly
       const response = await fetch('/api/auth/verify');
       const data = await response.json();
-      
+
       setIsAuthenticated(data.authenticated);
+      if (data.authenticated) {
+        setUser({
+          username: data.username,
+          role: data.role,
+          clientId: data.clientId,
+        });
+      } else {
+        setUser(null);
+      }
     } catch (error) {
       console.error('Auth check failed:', error);
       setIsAuthenticated(false);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -43,7 +51,12 @@ export function AuthProvider({ children }) {
 
       if (response.ok) {
         setIsAuthenticated(true);
-        return { success: true };
+        setUser({
+          username: data.username,
+          role: data.role,
+          clientId: data.clientId || null,
+        });
+        return { success: true, role: data.role };
       } else {
         return { success: false, message: data.message || 'Login failed' };
       }
@@ -59,26 +72,40 @@ export function AuthProvider({ children }) {
       console.error('Logout error:', error);
     } finally {
       setIsAuthenticated(false);
+      setUser(null);
       router.push('/login');
     }
   };
 
-  // Redirect to login if not authenticated
-  const requireAuth = () => {
+  const requireAuth = useCallback(() => {
     if (!loading && !isAuthenticated) {
       router.push('/login');
       return false;
     }
     return true;
+  }, [loading, isAuthenticated, router]);
+
+  const hasRole = (roles) => {
+    if (!user) return false;
+    return roles.includes(user.role);
   };
+
+  const isSuperAdmin = () => user?.role === 'super_admin';
+  const isManager = () => ['super_admin', 'manager'].includes(user?.role);
+  const isViewer = () => ['super_admin', 'manager', 'viewer'].includes(user?.role);
 
   const value = {
     isAuthenticated,
     loading,
+    user,
     login,
     logout,
     requireAuth,
-    checkAuthStatus
+    checkAuthStatus,
+    hasRole,
+    isSuperAdmin,
+    isManager,
+    isViewer,
   };
 
   return (

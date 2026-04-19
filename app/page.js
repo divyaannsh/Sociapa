@@ -126,7 +126,7 @@ export default function Dashboard() {
             👋 Welcome back, {user?.username || 'Admin'}
           </h2>
           <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>
-            Here's what's happening across your ad accounts today.
+            Here&apos;s what&apos;s happening across your ad accounts today.
           </p>
         </div>
         <div className="d-flex gap-2 flex-wrap">

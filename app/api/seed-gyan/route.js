@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
-import xlsx from 'xlsx';
+import * as xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcryptjs';

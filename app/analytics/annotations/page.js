@@ -64,7 +64,7 @@ export default function ChartAnnotationsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16, marginBottom: 28 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 800 }}>✏️ Chart Annotations</h1>
-          <p style={{ margin: '6px 0 0', color: '#718096' }}>Leave notes on performance spikes & drops — "Holiday sale started", "Budget cut"</p>
+          <p style={{ margin: '6px 0 0', color: '#718096' }}>Leave notes on performance spikes & drops — &quot;Holiday sale started&quot;, &quot;Budget cut&quot;</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <select value={selected} onChange={e => setSelected(e.target.value)}

@@ -1,16 +1,7 @@
 {
   "/page": "app/page.js",
   "/campaigns/create/page": "app/campaigns/create/page.js",
-  "/api/notifications/route": "app/api/notifications/route.js",
-  "/api/clients/route": "app/api/clients/route.js",
-  "/users/page": "app/users/page.js",
-  "/api/campaigns/route": "app/api/campaigns/route.js",
-  "/api/users/route": "app/api/users/route.js",
-  "/analytics/roas/page": "app/analytics/roas/page.js",
-  "/notifications/page": "app/notifications/page.js",
   "/roadmap/page": "app/roadmap/page.js",
-  "/api/reports/pdf/route": "app/api/reports/pdf/route.js",
-  "/reports/pdf/page": "app/reports/pdf/page.js",
-  "/api/analytics/clients/route": "app/api/analytics/clients/route.js",
+  "/notifications/page": "app/notifications/page.js",
   "/client-portal/login/page": "app/client-portal/login/page.js"
 }

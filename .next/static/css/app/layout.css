@@ -1,121 +1,267 @@
 /*!**************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./styles/index.css ***!
   \**************************************************************************************************************************************************************************************************************************************************************/
+/* Sociapa Ads Dashboard — Global CSS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./styles/layout-fix.css ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************/
-/* Layout Fix for Images and Navigation */
-
-/* Fix navigation to stay on left */
-.nxl-navigation {
-  position: fixed !important;
-  left: 0 !important;
-  top: 0 !important;
-  width: 280px !important;
-  height: 100vh !important;
-  z-index: 1000 !important;
-  background: #fff !important;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1) !important;
-  transition: transform 0.3s ease !important;
+/* ─── Base ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-/* Fix main content to not overlap with navigation */
-.nxl-container {
-  margin-left: 280px !important;
-  min-height: 100vh !important;
-  transition: margin-left 0.3s ease !important;
+body,
+html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Ensure brand logo is properly positioned */
-.b-brand {
-  display: flex !important;
-  align-items: center !important;
-  padding: 15px 20px !important;
-  text-decoration: none !important;
+/* ─── Cards ─────────────────────────────────────────────── */
+.card {
+    transition: box-shadow 0.22s ease, transform 0.22s ease;
+    border-radius: 14px !important;
 }
 
-.b-brand img {
-  max-width: 150px !important;
-  height: auto !important;
-  object-fit: contain !important;
-}
-
-/* Fix content area */
-.nxl-content {
-  padding: 20px !important;
-  overflow-x: hidden !important;
-}
-
-.content-area-body {
-  padding: 20px !important;
-}
-
-/* Responsive fixes */
-@media (max-width: 768px) {
-  .nxl-navigation {
-    width: 250px !important;
-  }
-  
-  .nxl-container {
-    margin-left: 250px !important;
-  }
+/* ─── Main Content ──────────────────────────────────────── */
+.main-content {
+    padding: 28px 24px;
+    min-height: calc(100vh - 70px);
 }
 
 @media (max-width: 576px) {
-  .nxl-navigation {
-    transform: translateX(-100%) !important;
-    transition: transform 0.3s ease !important;
-  }
-  
-  .nxl-navigation.open {
-    transform: translateX(0%) !important;
-  }
-  
-  .nxl-container {
-    margin-left: 0 !important;
-    transition: margin-left 0.3s ease !important;
-  }
+    .main-content {
+        padding: 16px 12px;
+    }
 }
 
-/* Hide mobile menu when desktop */
-@media (min-width: 769px) {
+/* ─── Smooth Page Transitions ────────────────────────────── */
+.nxl-content {
+    animation: fadeSlide 0.22s ease;
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* ─── Select / Input dark-mode fallback ──────────────────── */
+select,
+input {
+    color-scheme: auto;
+}
+
+/* ─── Recharts tooltip ───────────────────────────────────── */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+    background: var(--card-bg, #fff) !important;
+    border-color: var(--card-border, #e2e8f0) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.dark-mode .recharts-text {
+    fill: #a0aec0 !important;
+}
+
+body.dark-mode .recharts-cartesian-grid-horizontal line,
+body.dark-mode .recharts-cartesian-grid-vertical line {
+    stroke: #2d3148 !important;
+}
+
+body.dark-mode .recharts-default-tooltip {
+    background: #1e2235 !important;
+    border-color: #2d3148 !important;
+    color: #e2e8f0 !important;
+}
+
+/* ─── Navigation submenu hover ───────────────────────────── */
+.nxl-submenu .nxl-link:hover {
+    color: #667eea !important;
+    background: rgba(102, 126, 234, 0.08) !important;
+}
+
+/* ─── Badge utilities ────────────────────────────────────── */
+.badge-soft-primary {
+    background: rgba(102, 126, 234, 0.12);
+    color: #667eea;
+}
+
+.badge-soft-success {
+    background: rgba(67, 233, 123, 0.12);
+    color: #2f9e58;
+}
+
+.badge-soft-danger {
+    background: rgba(245, 87, 108, 0.12);
+    color: #c0392b;
+}
+
+.badge-soft-warning {
+    background: rgba(246, 201, 14, 0.12);
+    color: #9a6700;
+}
+
+/* ─── Mobile nav ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .nxl-navigation {
+        z-index: 9999;
+    }
+}
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./styles/layout-fix.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/* ── Layout Fix ─────────────────────────────────────────────────────────────
+   IMPORTANT: Do NOT add !important to margin-left / width rules for
+   .nxl-navigation / .nxl-container — the theme.min.css controls those
+   dynamically via the `.minimenu` class on <html>.
+   This file only adds fixes for things the theme doesn't handle.
+──────────────────────────────────────────────────────────────────────────── */
+
+/* Ensure brand logo is properly contained */
+.b-brand {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  text-decoration: none;
+}
+
+.b-brand img {
+  max-width: 150px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Prevent horizontal overflow in content */
+.nxl-content {
+  overflow-x: hidden;
+}
+
+/* Fix table responsiveness */
+.table-responsive {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Ensure charts don't overlap other elements */
+.apexcharts-canvas {
+  z-index: 1 !important;
+}
+
+/* Ensure cards stack correctly */
+.card {
+  position: relative;
+  z-index: 1;
+}
+
+/* Images in content should never overflow */
+.nxl-content img,
+.content-area-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile: hide the desktop nav toggle */
+@media (min-width: 1025px) {
   .nxl-head-mobile-toggler {
     display: none !important;
   }
 }
 
-/* Fix any overlapping issues */
-.card {
-  position: relative !important;
-  z-index: 1 !important;
+/* ── Client Portal: full-page clean slate ─────────────────────────── */
+
+/* Zero out every admin-shell offset */
+html.client-portal-page,
+html.client-portal-page body,
+html.client-portal-page main,
+html.client-portal-page .nxl-container,
+html.client-portal-page .nxl-content,
+html.client-portal-page [class^="nxl-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-left: 0 !important;
+  padding-top: 0 !important;
+  top: 0 !important;
+  border: 0 !important;
 }
 
-/* Ensure images in content don't disappear */
-img {
-  max-width: 100% !important;
+/* Hide admin header & sidebar completely */
+html.client-portal-page .nxl-header {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+}
+html.client-portal-page .nxl-navigation {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+}
+
+/* Make the content area fill the full viewport and scrollable */
+html.client-portal-page .nxl-container,
+html.client-portal-page .nxl-content {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  min-height: 100vh !important;
   height: auto !important;
-  object-fit: contain !important;
+  overflow: visible !important;
 }
 
-/* Fix table responsiveness */
-.table-responsive {
-  overflow-x: auto !important;
-  max-width: 100% !important;
+html.client-portal-page,
+html.client-portal-page body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: transparent !important;
+  height: auto !important;
 }
-
-/* Ensure charts don't overlap */
-.apexcharts-canvas {
-  z-index: 1 !important;
-}
-
 /*!******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./styles/dark-mode.css ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
 /* Dark Mode CSS - Sociapa Ads Dashboard */
+body {
+  --card-bg: #fff;
+  --card-border: #e2e8f0;
+  --border-color: #f0f0f0;
+  --hover-bg: #f8f9ff;
+  --text-primary: #2d3748;
+  --text-muted: #718096;
+}
+
 body.dark-mode {
   --bs-body-bg: #0f1117;
   --bs-body-color: #e2e8f0;
+  --card-bg: #1e2235;
+  --card-border: #2d3148;
+  --border-color: #2d3148;
+  --hover-bg: rgba(102,126,234,0.06);
+  --text-primary: #e2e8f0;
+  --text-muted: #a0aec0;
   background-color: #0f1117 !important;
   color: #e2e8f0 !important;
 }

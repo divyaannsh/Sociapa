@@ -30,12 +30,19 @@ export default function LayoutClient({ children }) {
   useEffect(() => {
     // Set sidebar to closed (minimenu) by default
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-      document.documentElement.classList.add('minimenu')
-      // Hide full logo and show abbreviated logo
-      const logoFull = document.querySelector('.logo-full')
-      const logoAbbr = document.querySelector('.logo-abbr')
-      if (logoFull) logoFull.style.display = 'none'
-      if (logoAbbr) logoAbbr.style.display = 'block'
+      // Mark client-portal pages so our CSS can strip the header-offset padding
+      if (pathname?.startsWith('/client-portal')) {
+        document.documentElement.classList.add('client-portal-page')
+        document.documentElement.classList.remove('minimenu')
+      } else {
+        document.documentElement.classList.remove('client-portal-page')
+        document.documentElement.classList.add('minimenu')
+        // Hide full logo and show abbreviated logo
+        const logoFull = document.querySelector('.logo-full')
+        const logoAbbr = document.querySelector('.logo-abbr')
+        if (logoFull) logoFull.style.display = 'none'
+        if (logoAbbr) logoAbbr.style.display = 'block'
+      }
     }
 
     // Wait for DOM to be ready and scripts to load
@@ -66,13 +73,15 @@ export default function LayoutClient({ children }) {
         window.commonInit()
       }
 
-      // Ensure sidebar stays closed after scripts load
+      // Ensure sidebar stays closed after scripts load (skip on client-portal)
       if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        document.documentElement.classList.add('minimenu')
-        const logoFull = document.querySelector('.logo-full')
-        const logoAbbr = document.querySelector('.logo-abbr')
-        if (logoFull) logoFull.style.display = 'none'
-        if (logoAbbr) logoAbbr.style.display = 'block'
+        if (!pathname?.startsWith('/client-portal')) {
+          document.documentElement.classList.add('minimenu')
+          const logoFull = document.querySelector('.logo-full')
+          const logoAbbr = document.querySelector('.logo-abbr')
+          if (logoFull) logoFull.style.display = 'none'
+          if (logoAbbr) logoAbbr.style.display = 'block'
+        }
       }
     }
 

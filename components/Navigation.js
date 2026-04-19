@@ -64,29 +64,28 @@ const Navigation = () => {
               {openMenu.analytics && (
                 <ul className="nxl-submenu">
                   <li className="nxl-item">
-                    <Link href="/analytics/dashboard" className={`nxl-link ${isActive('/analytics/dashboard') ? 'active' : ''}`}>
-                      Dashboard
-                    </Link>
+                    <Link href="/analytics/dashboard" className={`nxl-link ${isActive('/analytics/dashboard') ? 'active' : ''}`}>Dashboard</Link>
                   </li>
                   <li className="nxl-item">
-                    <Link href="/analytics/comparison" className={`nxl-link ${isActive('/analytics/comparison') ? 'active' : ''}`}>
-                      Comparison Mode
-                    </Link>
+                    <Link href="/analytics/roas" className={`nxl-link ${isActive('/analytics/roas') ? 'active' : ''}`}>💰 ROAS & ROI</Link>
                   </li>
                   <li className="nxl-item">
-                    <Link href="/analytics/funnel" className={`nxl-link ${isActive('/analytics/funnel') ? 'active' : ''}`}>
-                      Funnel Analysis
-                    </Link>
+                    <Link href="/analytics/budget-pacing" className={`nxl-link ${isActive('/analytics/budget-pacing') ? 'active' : ''}`}>🚦 Budget Pacing</Link>
                   </li>
                   <li className="nxl-item">
-                    <Link href="/analytics/heatmap" className={`nxl-link ${isActive('/analytics/heatmap') ? 'active' : ''}`}>
-                      Performance Heatmap
-                    </Link>
+                    <Link href="/analytics/cross-platform" className={`nxl-link ${isActive('/analytics/cross-platform') ? 'active' : ''}`}>📊 Cross-Platform Grid</Link>
                   </li>
                   <li className="nxl-item">
-                    <Link href="/analytics/goals" className={`nxl-link ${isActive('/analytics/goals') ? 'active' : ''}`}>
-                      Goal Tracking
-                    </Link>
+                    <Link href="/analytics/excel" className={`nxl-link ${isActive('/analytics/excel') ? 'active' : ''}`}>📂 Excel Analytics (Gyan)</Link>
+                  </li>
+                  <li className="nxl-item">
+                    <Link href="/analytics/annotations" className={`nxl-link ${isActive('/analytics/annotations') ? 'active' : ''}`}>✏️ Chart Annotations</Link>
+                  </li>
+                  <li className="nxl-item">
+                    <Link href="/analytics/comparison" className={`nxl-link ${isActive('/analytics/comparison') ? 'active' : ''}`}>Comparison Mode</Link>
+                  </li>
+                  <li className="nxl-item">
+                    <Link href="/analytics/goals" className={`nxl-link ${isActive('/analytics/goals') ? 'active' : ''}`}>Goal Tracking</Link>
                   </li>
                 </ul>
               )}
@@ -163,11 +162,34 @@ const Navigation = () => {
               </Link>
             </li>
 
+
+
+            {/* Roadmap */}
+            <li className="nxl-item">
+              <Link href="/roadmap" className={`nxl-link ${isActive('/roadmap') ? 'active' : ''}`}>
+                <span className="nxl-micon"><i className="feather-map" /></span>
+                <span className="nxl-mtext">Sprint Roadmap</span>
+              </Link>
+            </li>
+
             {/* Reports */}
+            <li className="nxl-item nxl-caption"><label>Reports</label></li>
             <li className="nxl-item">
               <Link href="/reports/email" className={`nxl-link ${isActive('/reports/email') ? 'active' : ''}`}>
                 <span className="nxl-micon"><i className="feather-mail" /></span>
                 <span className="nxl-mtext">Email Reports</span>
+              </Link>
+            </li>
+            <li className="nxl-item">
+              <Link href="/reports/scheduled" className={`nxl-link ${isActive('/reports/scheduled') ? 'active' : ''}`}>
+                <span className="nxl-micon"><i className="feather-calendar" /></span>
+                <span className="nxl-mtext">Scheduled Reports</span>
+              </Link>
+            </li>
+            <li className="nxl-item">
+              <Link href="/reports/pdf" className={`nxl-link ${isActive('/reports/pdf') ? 'active' : ''}`}>
+                <span className="nxl-micon"><i className="feather-file-text" /></span>
+                <span className="nxl-mtext">📄 PDF Builder</span>
               </Link>
             </li>
 
@@ -187,12 +209,20 @@ const Navigation = () => {
 
             {/* Super Admin only */}
             {isSuperAdmin?.() && (
-              <li className="nxl-item">
-                <Link href="/users" className={`nxl-link ${isActive('/users') ? 'active' : ''}`}>
-                  <span className="nxl-micon"><i className="feather-user-check" /></span>
-                  <span className="nxl-mtext">User Management</span>
-                </Link>
-              </li>
+              <>
+                <li className="nxl-item">
+                  <Link href="/users" className={`nxl-link ${isActive('/users') ? 'active' : ''}`}>
+                    <span className="nxl-micon"><i className="feather-user-check" /></span>
+                    <span className="nxl-mtext">User Management</span>
+                  </Link>
+                </li>
+                <li className="nxl-item">
+                  <Link href="/settings/integrations" className={`nxl-link ${isActive('/settings/integrations') ? 'active' : ''}`}>
+                    <span className="nxl-micon"><i className="feather-zap" /></span>
+                    <span className="nxl-mtext">⚡ Integrations</span>
+                  </Link>
+                </li>
+              </>
             )}
 
             {/* Client Portal Link */}

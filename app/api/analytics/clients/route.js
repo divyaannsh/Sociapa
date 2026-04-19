@@ -11,16 +11,29 @@ export async function GET(request) {
   const client = new MongoClient(MONGODB_URI);
 
   try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const clientsCollection = db.collection(CLIENTS_COLLECTION);
-    const campaignsCollection = db.collection(CAMPAIGNS_COLLECTION);
+    let clients = [];
+    let campaigns = [];
+    
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const staticDataPath = path.join(process.cwd(), 'public', 'gyan_static_data.json');
+      if (fs.existsSync(staticDataPath)) {
+        const staticDb = JSON.parse(fs.readFileSync(staticDataPath, 'utf-8'));
+        clients = staticDb.clients;
+        campaigns = Object.keys(staticDb.campaignData).map(k => staticDb.campaignData[k].map(c => ({...c, clientId: k}))).flat();
+      }
+    } catch(err) { console.error(err) }
 
-    // 1. Fetch all clients
-    const clients = await clientsCollection.find({}).toArray();
+    if (clients.length === 0) {
+      await client.connect();
+      const db = client.db(DB_NAME);
+      const clientsCollection = db.collection(CLIENTS_COLLECTION);
+      const campaignsCollection = db.collection(CAMPAIGNS_COLLECTION);
 
-    // 2. Fetch all campaigns (optimization: could filter by clientIds if needed, but for now fetch all)
-    const campaigns = await campaignsCollection.find({}).toArray();
+      clients = await clientsCollection.find({}).toArray();
+      campaigns = await campaignsCollection.find({}).toArray();
+    }
 
     // 3. Aggregate data per client
     const clientsData = clients.map((clientDoc) => {
@@ -38,7 +51,7 @@ export async function GET(request) {
 
         campaign.rows.forEach((row) => {
           // Parse Date
-          let dateStr = row["Day"] || row["Date"] || row["date"];
+          let dateStr = row["Day"] || row["Date"] || row["date"] || row["Reporting starts"];
           if (!dateStr) return;
           
           // Normalize date format if needed (assuming YYYY-MM-DD or similar sortable string for now)

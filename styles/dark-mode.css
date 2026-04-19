@@ -1,7 +1,22 @@
 /* Dark Mode CSS - Sociapa Ads Dashboard */
+body {
+  --card-bg: #fff;
+  --card-border: #e2e8f0;
+  --border-color: #f0f0f0;
+  --hover-bg: #f8f9ff;
+  --text-primary: #2d3748;
+  --text-muted: #718096;
+}
+
 body.dark-mode {
   --bs-body-bg: #0f1117;
   --bs-body-color: #e2e8f0;
+  --card-bg: #1e2235;
+  --card-border: #2d3148;
+  --border-color: #2d3148;
+  --hover-bg: rgba(102,126,234,0.06);
+  --text-primary: #e2e8f0;
+  --text-muted: #a0aec0;
   background-color: #0f1117 !important;
   color: #e2e8f0 !important;
 }

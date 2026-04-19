@@ -6,6 +6,19 @@ const DB_NAME = "dashboard";
 const COLLECTION_NAME = "clients";
 
 export async function GET(request) {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const staticDataPath = path.join(process.cwd(), 'public', 'gyan_static_data.json');
+    if (fs.existsSync(staticDataPath)) {
+      const staticDb = JSON.parse(fs.readFileSync(staticDataPath, 'utf-8'));
+      return new Response(JSON.stringify({ clients: staticDb.clients }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  } catch (e) { console.error("Static DB reading error:", e); }
+
   const client = new MongoClient(MONGODB_URI);
 
   try {

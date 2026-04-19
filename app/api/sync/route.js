@@ -1,8 +1,8 @@
-import { getDb } from '../../../../lib/mongodb';
-import { getCurrentUser } from '../../../../lib/auth';
-import { fetchMetaCampaigns } from '../../../../lib/meta-api';
-import { fetchGoogleCampaigns, getGoogleAccessToken } from '../../../../lib/google-ads-api';
-import { fetchLinkedInCampaigns } from '../../../../lib/linkedin-api';
+import { getDb } from '../../../lib/mongodb';
+import { getCurrentUser } from '../../../lib/auth';
+import { fetchMetaCampaigns } from '../../../lib/meta-api';
+import { fetchGoogleCampaigns, getGoogleAccessToken } from '../../../lib/google-ads-api';
+import { fetchLinkedInCampaigns } from '../../../lib/linkedin-api';
 
 function decode(text) {
   if (!text) return '';
